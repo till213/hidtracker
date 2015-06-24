@@ -100,7 +100,7 @@ static int foohid_connect(io_connect_t *conn)
     }
 
     IOObjectRelease(iterator);
-    return 0;
+    return -1;
 }
 
 static void foohid_close(io_connect_t conn)
@@ -237,14 +237,14 @@ int main(int argc, const char **argv)
     }
 
     // Now initialise linuxTracker
-//    bool trackingInitialised = intialise_tracking();
-//    if (!trackingInitialised) {
-//        printf("Initialisation of tracking failed: tracker not running or not found.\n");
+    bool trackingInitialised = intialise_tracking();
+    if (!trackingInitialised) {
+        printf("Initialisation of tracking failed: tracker not running or not found.\n");
 
-//        foohid_destroy(FoohidDevice, strlen(FoohidDevice));
+        foohid_destroy(FoohidDevice, strlen(FoohidDevice));
 
-//        exit(1);
-//    }
+        exit(1);
+    }
 
     struct mouse_report_t mouse;
 
