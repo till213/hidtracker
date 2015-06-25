@@ -249,13 +249,13 @@ int main(int argc, const char **argv)
     struct mouse_report_t mouse;
 
     // Do some silly stuff
-    for (int i = 0; i < 10000; ++i) {
+    for (int i = 0; i < 1000000; ++i) {
         if (linuxtrack_get_pose(&heading, &pitch, &roll, &x, &y, &z, &counter) > 0) {
           printf("heading:%f  pitch:%f  roll:%f\n  x:%f  y:%f  z:%f\n", heading, pitch, roll, x, y, z);
         }
         mouse.buttons = 0;
-        mouse.x = rand();
-        mouse.y = rand();
+        mouse.x = heading; //rand();
+        mouse.y = pitch; //rand();
 
         // ignore return value, just for testing
         ret = foohid_send(FoohidDevice, strlen(FoohidDevice), (uint64_t)&mouse, sizeof(mouse_report_t));
