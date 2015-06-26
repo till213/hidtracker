@@ -249,17 +249,28 @@ int main(int argc, const char **argv)
     struct mouse_report_t mouse;
 
     // Do some silly stuff
-    for (int i = 0; i < 1000000; ++i) {
+    // for (int i = 0; i < 1000000; ++i) {
+    for (;;) {
         if (linuxtrack_get_pose(&heading, &pitch, &roll, &x, &y, &z, &counter) > 0) {
           printf("heading:%f  pitch:%f  roll:%f\n  x:%f  y:%f  z:%f\n", heading, pitch, roll, x, y, z);
-        }
-        mouse.buttons = 0;
-        mouse.x = heading; //rand();
-        mouse.y = pitch; //rand();
 
-        // ignore return value, just for testing
-        ret = foohid_send(FoohidDevice, strlen(FoohidDevice), (uint64_t)&mouse, sizeof(mouse_report_t));
+          mouse.buttons = 0;
+          float nx = (130.0f + heading) / 260.0f;
+          float ny = (80.0f + pitch) / 160.0f;
+          mouse.x = (int)(nx * 1024.0f); //rand();
+          mouse.y = (int)(ny * 768.0f);; //rand();
+          mouse.x = 1;
+          mouse.y = 1;
+
+          printf("nx: %f, ny: %f mouse.x:%d  mouse.y:%d\n", nx, ny, mouse.x, mouse.y);
+
+          // ignore return value, just for testing
+          ret = foohid_send(FoohidDevice, strlen(FoohidDevice), (uint64_t)&mouse, sizeof(mouse_report_t));
+        }
+
     }
+
+    //linuxtrack_shutdown();
 
     // Finally destroy ("disconnect") the virtual HID device again
     ret = foohid_destroy(FoohidDevice, strlen(FoohidDevice));
